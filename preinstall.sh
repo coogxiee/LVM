@@ -12,7 +12,7 @@ echo "                Starting Script                  "
 echo "-------------------------------------------------"
 
 # create partitions
-sgdisk -n 1:0:+100G /dev/sda
+fdisk -n 1:0:+100G /dev/sda
 sgdisk -n 2:0:+100G /dev/sdb
 sgdisk -n 3:0:+100G /dev/sdc
 
