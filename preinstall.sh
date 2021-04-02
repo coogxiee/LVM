@@ -8,13 +8,7 @@
 #-------------------------------------------------------------------------
 https://github.com/coogxiee/LVM-/blob/main/preinstall.sh
 echo "-------------------------------------------------"
-echo "Starting Script                                  "
-echo "-------------------------------------------------"
-
-
-
-echo "-------------------------------------------------"
-echo "-------select your disk to format----------------"
+echo "                Starting Script                  "               
 echo "-------------------------------------------------"
 # disk prep
 sgdisk -Z /dev/sda # zap all on disk
