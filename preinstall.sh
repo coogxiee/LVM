@@ -12,12 +12,16 @@ echo "                Starting Script                  "
 echo "-------------------------------------------------"
 
 # create partitions
-fdisk -n 1:0:+100G /dev/sda
-fdisk -n 2:0:+100G /dev/sdb
-fdisk -n 3:0:+100G /dev/sdc
+sgdisk -n 1:0:+99G /dev/sda
+sgdisk -n 2:0:+99G /dev/sdb
+sgdisk -n 3:0:+99G /dev/sdc
 
-# set partition types
-sgdisk -t 1:8300 /dev/sda #Linux Filesystem
-sgdisk -t 2:8300 /dev/sdb #Linux Filesystem
-sgdisk -t 3:8300 /dev/sdc #Linux Filesystem
-
+#lvm
+pvcreate /dev/sda1 dev/sdb1 /dev/sdc1
+vgcreate LVM /dev/sda1 /dev/sdb1 /dev/sdc1
+lvs create -L +200M -n BOOT
+lvs create -l +100%FREE -n ROOT
+mkfs.vfat -F 32 -n "BOOT" /dev/LVM/BOOT
+mkfs.ext4 -L "ROOT" /dev/LVM/ROOT
+lsblk
+mount /dev/LVM/ROOT /mnt
