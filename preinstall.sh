@@ -24,5 +24,8 @@ sgdisk -a 2048 -o /dev/sda # new gpt disk 2048 alignment
 sgdisk -a 2048 -o /dev/sdb # new gpt disk 2048 alignment
 sgdisk -a 2048 -o /dev/sdc # new gpt disk 2048 alignment
 
-pvcreate /dev/sda1 /dev/sdb /dev/sdc
+# create partitions
+sgdisk -n 1:0:+100G /dev/sda #
+sgdisk -n 2:0:+100G /dev/sdb #
+sgdisk -n 3:0:+100G /dev/sdc #
 
