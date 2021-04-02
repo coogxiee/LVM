@@ -13,22 +13,27 @@
 #-------------------------------------------------------------------------
 https://github.com/coogxiee/LVM-/blob/main/preinstall.sh
 echo "-------------------------------------------------"
-echo "                Starting Script                  "               
+echo "-------select your disk to format----------------"
 echo "-------------------------------------------------"
+lsblk
+echo "Please enter disk1: (example /dev/sda)"
+echo "Please enter disk2: (example /dev/sda)"
+read DISK1
+read DISK2
+echo "--------------------------------------"
+echo -e "\nFormatting disk...\n$HR"
+echo "--------------------------------------"
 
 # create partitions
-sgdisk -n 1:0:+99G /dev/sda
-sgdisk -n 1:0:+99G /dev/sdb
-sgdisk -n 1:0:+99G /dev/sdc
+sgdisk -n 1:0:+99G ${DISK1}
+sgdisk -n 1:0:+99G ${DISK2}
 
 #lvm
-pvcreate /dev/sda1 
-pvcreate /dev/sdb1 
-pvcreate /dev/sdc1
+pvcreate ${DISK1}
+pvcreate ${DISK2}
 
-vgcreate LVM /dev/sda1 
-vgextend LVM /dev/sdb1
-vgextend LVM /dev/sdc1
+vgcreate LVM ${DISK1}
+vgextend LVM ${DISK2}
 
 lvcreate -L +200M LVM -n BOOT
 lvcreate -l +100%FREE LVM -n ROOT
