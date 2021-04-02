@@ -25,7 +25,7 @@ vgcreate LVM /dev/sda1
 vgcreate LVM /dev/sdb1
 vgcreate LVM /dev/sdc1
 
-lvcreate -L +200M LVM -n BOOT
+lvcreate -L +200M LVM -n ROOT
 lvcreate -l +100%FREE LVM -n BOOT
 mkfs.vfat -F 32 -n "BOOT" /dev/LVM/BOOT
 mkfs.ext4 -L "ROOT" /dev/LVM/ROOT
