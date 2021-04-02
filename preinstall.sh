@@ -17,7 +17,7 @@ sgdisk -n 2:0:+99G /dev/sdb
 sgdisk -n 3:0:+99G /dev/sdc
 
 #lvm
-pvcreate /dev/sda1 dev/sdb1 /dev/sdc1
+pvcreate /dev/sda1 /dev/sdb1 /dev/sdc1
 vgcreate LVM /dev/sda1 /dev/sdb1 /dev/sdc1
 lvs create -L +200M -n BOOT
 lvs create -l +100%FREE -n ROOT
