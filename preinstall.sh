@@ -27,8 +27,8 @@ pvcreate /dev/sdb1
 pvcreate /dev/sdc1
 
 vgcreate LVM /dev/sda1 
-vgcreate LVM /dev/sdb1
-vgcreate LVM /dev/sdc1
+vgextend LVM /dev/sdb1
+vgextend LVM /dev/sdc1
 
 lvcreate -L +200M LVM -n ROOT
 lvcreate -l +100%FREE LVM -n BOOT
