@@ -13,8 +13,8 @@ echo "-------------------------------------------------"
 
 # create partitions
 fdisk -n 1:0:+100G /dev/sda
-sgdisk -n 2:0:+100G /dev/sdb
-sgdisk -n 3:0:+100G /dev/sdc
+fdisk -n 2:0:+100G /dev/sdb
+fdisk -n 3:0:+100G /dev/sdc
 
 # set partition types
 sgdisk -t 1:8300 /dev/sda #Linux Filesystem
