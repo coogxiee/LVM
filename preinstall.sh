@@ -21,10 +21,6 @@ sgdisk -Z /dev/sda # zap all on disk
 sgdisk -Z /dev/sdb # zap all on disk
 sgdisk -Z /dev/sdc # zap all on disk
 
-sgdisk -a 2048 -o /dev/sda # new gpt disk 2048 alignment
-sgdisk -a 2048 -o /dev/sdb # new gpt disk 2048 alignment
-sgdisk -a 2048 -o /dev/sdc # new gpt disk 2048 alignment
-
 # create partitions
 sgdisk -n 1:0:+100G /dev/sda
 sgdisk -n 2:0:+100G /dev/sdb
