@@ -29,3 +29,8 @@ sgdisk -n 1:0:+100G /dev/sda #
 sgdisk -n 2:0:+100G /dev/sdb #
 sgdisk -n 3:0:+100G /dev/sdc #
 
+# set partition types
+sgdisk -t 1:8300 ${DISK} #Linux Filesystem
+sgdisk -t 2:8300 ${DISK} #Linux Filesystem
+sgdisk -t 3:8300 ${DISK} #Linux Filesystem
+
