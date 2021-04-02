@@ -6,7 +6,7 @@
 #   /_/ \_\_| \__|_||_|_|  |_\__,_|\__|_\__|
 #  Arch Linux Post Install Setup and Config
 #-------------------------------------------------------------------------
-
+https://github.com/coogxiee/LVM-/blob/main/preinstall.sh
 echo "-------------------------------------------------"
 echo "Starting Script                                  "
 echo "-------------------------------------------------"
@@ -20,17 +20,18 @@ echo "-------------------------------------------------"
 sgdisk -Z /dev/sda # zap all on disk
 sgdisk -Z /dev/sdb # zap all on disk
 sgdisk -Z /dev/sdc # zap all on disk
+
 sgdisk -a 2048 -o /dev/sda # new gpt disk 2048 alignment
 sgdisk -a 2048 -o /dev/sdb # new gpt disk 2048 alignment
 sgdisk -a 2048 -o /dev/sdc # new gpt disk 2048 alignment
 
 # create partitions
-sgdisk -n 1:0:+100G /dev/sda #
-sgdisk -n 2:0:+100G /dev/sdb #
-sgdisk -n 3:0:+100G /dev/sdc #
+sgdisk -n 1:0:+100G /dev/sda
+sgdisk -n 2:0:+100G /dev/sdb
+sgdisk -n 3:0:+100G /dev/sdc
 
 # set partition types
-sgdisk -t 1:8300 ${DISK} #Linux Filesystem
-sgdisk -t 2:8300 ${DISK} #Linux Filesystem
-sgdisk -t 3:8300 ${DISK} #Linux Filesystem
+sgdisk -t 1:8300 /dev/sda #Linux Filesystem
+sgdisk -t 2:8300 /dev/sdb #Linux Filesystem
+sgdisk -t 3:8300 /dev/sdc #Linux Filesystem
 
