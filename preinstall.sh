@@ -17,10 +17,16 @@ sgdisk -n 2:0:+99G /dev/sdb
 sgdisk -n 3:0:+99G /dev/sdc
 
 #lvm
-pvcreate /dev/sda1 /dev/sdb1 /dev/sdc1
-vgcreate LVM /dev/sda1 /dev/sdb1 /dev/sdc1
-lvs create -L +200M -n BOOT
-lvs create -l +100%FREE -n ROOT
+pvcreate /dev/sda1 
+pvcreate /dev/sdb1 
+pvcreate /dev/sdc1
+
+vgcreate LVM /dev/sda1 
+vgcreate LVM /dev/sdb1
+vgcreate LVM /dev/sdc1
+
+lvcreate -L +200M LVM -n BOOT
+lvcreate -l +100%FREE LVM -n BOOT
 mkfs.vfat -F 32 -n "BOOT" /dev/LVM/BOOT
 mkfs.ext4 -L "ROOT" /dev/LVM/ROOT
 lsblk
