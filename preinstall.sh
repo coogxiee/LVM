@@ -18,8 +18,8 @@ echo "-------------------------------------------------"
 
 # create partitions
 sgdisk -n 1:0:+99G /dev/sda
-sgdisk -n 2:0:+99G /dev/sdb
-sgdisk -n 3:0:+99G /dev/sdc
+sgdisk -n 1:0:+99G /dev/sdb
+sgdisk -n 1:0:+99G /dev/sdc
 
 #lvm
 pvcreate /dev/sda1 
