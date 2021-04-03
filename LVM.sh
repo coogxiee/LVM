@@ -37,9 +37,10 @@ lvcreate -L +200M LVM -n BOOT
 lvcreate -l +100%FREE LVM -n ROOT
 mkfs.vfat -F 32 -n "BOOT" /dev/LVM/BOOT
 mkfs.ext4 -L "ROOT" /dev/LVM/ROOT
-lsblk
+mkdir /mnt/boot
 mount /dev/LVM/ROOT /mnt
 mount /dev/LVM/BOOT /mnt/boot
+lsblk
 
 echo "--------------------------------------"
 echo "-- Arch Install on selected Drive   --"
