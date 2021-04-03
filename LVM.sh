@@ -39,6 +39,7 @@ mkfs.vfat -F 32 -n "BOOT" /dev/LVM/BOOT
 mkfs.ext4 -L "ROOT" /dev/LVM/ROOT
 lsblk
 mount /dev/LVM/ROOT /mnt
+mount /dev/LVM/BOOT /mnt/boot
 
 echo "--------------------------------------"
 echo "-- Arch Install on selected Drive   --"
