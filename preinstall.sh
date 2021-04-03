@@ -16,8 +16,8 @@ echo "-------------------------------------------------"
 echo "-------select your disk to format----------------"
 echo "-------------------------------------------------"
 lsblk
-echo "Please enter disk1: (example /dev/sda)"
-echo "Please enter disk2: (example /dev/sda)"
+echo "Please enter disk: (example /dev/sda)"
+echo "Please enter disk: (example /dev/sda)"
 read DISK1
 read DISK2
 echo "--------------------------------------"
@@ -29,11 +29,9 @@ sgdisk -n 1:0:+99G ${DISK1}
 sgdisk -n 1:0:+99G ${DISK2}
 
 #lvm
-pvcreate ${DISK1}
-pvcreate ${DISK2}
+pvcreate ${DISK1} ${DISK2} 
 
-vgcreate LVM ${DISK1}
-vgextend LVM ${DISK2}
+vgcreate LVM ${DISK1} ${DISK2} 
 
 lvcreate -L +200M LVM -n BOOT
 lvcreate -l +100%FREE LVM -n ROOT
