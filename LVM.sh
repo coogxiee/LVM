@@ -59,12 +59,12 @@ hwclock --systohc
 #locale-gen
 echo "LANG=en_US.UTF-8" >> /etc/locale.conf
 echo "KEYMAP=de-latin1-nodeadkeys" >> /etc/vconsole.conf
-#echo "ReRe" >> /etc/hostname
+#echo "change to your hostname" >> /etc/hostname
 # Setting hosts file
 echo "
 127.0.0.1	    localhost
 ::1		        localhost
-127.0.1.1	    ReRe.localdomain	ReRe" >> /etc/hosts
+127.0.1.1	    yourhostname.localdomain	yourhostname" >> /etc/hosts
 mkinitcpio -P
 echo "--------------------------------------"
 echo "-- Grub Installation  --"
