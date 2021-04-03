@@ -29,9 +29,9 @@ sgdisk -n 1:0:+99G ${DISK1}
 sgdisk -n 1:0:+99G ${DISK2}
 
 #lvm
-pvcreate ${DISK1} ${DISK2} 
+pvcreate /dev/sda1 /dev/sdb1
 
-vgcreate LVM ${DISK1} ${DISK2} 
+vgcreate LVM /dev/sda1 /dev/sdb1
 
 lvcreate -L +200M LVM -n BOOT
 lvcreate -l +100%FREE LVM -n ROOT
