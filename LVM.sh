@@ -17,29 +17,31 @@ echo "-------select your disk to format----------------"
 echo "-------------------------------------------------"
 lsblk
 echo "Please enter disk: (example /dev/sda)"
-echo "Please enter disk: (example /dev/sda)"
 read DISK1
-read DISK2
 echo "--------------------------------------"
 echo -e "\nFormatting disk...\n$HR"
 echo "--------------------------------------"
 
 # create partitions
 sgdisk -n 1:0:+99G ${DISK1}
-sgdisk -n 1:0:+99G ${DISK2}
 
 #lvm
-pvcreate /dev/sda1 /dev/sdb1
+pvcreate /dev/sda1 
 
-vgcreate LVM /dev/sda1 /dev/sdb1
+vgcreate vg1 LVM /dev/sda1 
 
-lvcreate -L +200M LVM -n BOOT
-lvcreate -l +100%FREE LVM -n ROOT
+lvcreate -L +200M LVM -n BOOT ${DISK1}
+lvcreate -l +120G LVM -n ROOT ${DISK1}
+lvcreate -l +100%FREE LVM -n HOME ${DISK1}
+lvcreate -l 
+
 mkfs.vfat -F 32 -n "BOOT" /dev/LVM/BOOT
 mkfs.ext4 -L "ROOT" /dev/LVM/ROOT
+mkfs.ext4 -L "HOME" /dev/LVM/HOME
 mkdir /mnt/boot
 mount /dev/LVM/ROOT /mnt
 mount /dev/LVM/BOOT /mnt/boot
+mount /dev/LVM/BOOT /mnt/home
 lsblk
 
 echo "--------------------------------------"
