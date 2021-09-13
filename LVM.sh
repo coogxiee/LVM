@@ -28,16 +28,16 @@ sgdisk -n 1:0:+99G ${DISK1}
 #lvm
 pvcreate /dev/sda1 
 
-vgcreate vg1 LVM /dev/sda1 
+vgcreate LVM /dev/sda1 
 
-lvcreate -L +200M LVM -n BOOT ${DISK1}
+lvcreate -L +200M LVM -n BOOT ${DISK1} 
 lvcreate -l +120G LVM -n ROOT ${DISK1}
 lvcreate -l +100%FREE LVM -n HOME ${DISK1}
-lvcreate -l 
 
 mkfs.vfat -F 32 -n "BOOT" /dev/LVM/BOOT
 mkfs.ext4 -L "ROOT" /dev/LVM/ROOT
 mkfs.ext4 -L "HOME" /dev/LVM/HOME
+
 mkdir /mnt/boot
 mount /dev/LVM/ROOT /mnt
 mount /dev/LVM/BOOT /mnt/boot
