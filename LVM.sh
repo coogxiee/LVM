@@ -1,48 +1,67 @@
-#!/usr/bin/env bash
-#-------------------------------------------------------------------------
-#        
-#        $$\   $$\    $$\ $$\      $$\ 
-#        $$ |  $$ |   $$ |$$$\    $$$ |
-#        $$ |  \$$\  $$  |$$\$$\$$ $$ |
-#        $$ |   \$$\$$  / $$ \$$$  $$ |
-#        $$ |    \$$$  /  $$ |\$  /$$ |
-#        $$$$$$$$\\$  /   $$ | \_/ $$ |
-#        \________|\_/    \__|     \__|
-#
-# 
-#-------------------------------------------------------------------------
-https://github.com/coogxiee/LVM-/blob/main/preinstall.sh
+#!/bin/bash
+
+echo "-------------------------------------------------"
+echo "Starting Script                                  "
+echo "-------------------------------------------------"
+timedatectl set-ntp true
+pacman -Sy --noconfirm
+pacman -S --noconfirm pacman-contrib
+
+echo -e "\nInstalling prereqs...\n$HR"
+pacman -S --noconfirm gptfdisk btrfs-progs
+
 echo "-------------------------------------------------"
 echo "-------select your disk to format----------------"
 echo "-------------------------------------------------"
 lsblk
-echo "Please enter disk: (example /dev/sda, /dev/nvme)"
-read DISK1
+echo "Please enter disk: (example /dev/sda)"
+read DISK
 echo "--------------------------------------"
 echo -e "\nFormatting disk...\n$HR"
 echo "--------------------------------------"
 
+# disk prep
+sgdisk -Z ${DISK} # zap all on disk
+sgdisk -a 2048 -o ${DISK} # new gpt disk 2048 alignment
+
 # create partitions
-sgdisk -n 1:0:+99G ${DISK1}
+sgdisk -n 1:0:+200M ${DISK} # partition 1 (UEFI SYS), default start block, 512MB
+sgdisk -n 2:0:+40G ${DISK} # partition 2 (Root), default start, remaining
+sgdisk -n 3:0:-8G ${DISK}   # partition 3 (swap), default start, remaining (-8G for 8GB Swap)
+sgdisk -n 4:0:0 ${DISK}     # partition 4 (home), default start, remaining
 
-#lvm
-pvcreate /dev/sda1 
+# set partition types
+sgdisk -t 1:ef00 ${DISK} #EFI
+sgdisk -t 2:8300 ${DISK} #Linux Filesystem
+sgdisk -t 3:8200 ${DISK} #Linux Swap
+sgdisk -t 4:8300 ${DISK} #Linux Filesystem
 
-vgcreate LVM /dev/sda1 
+# label partitions
+sgdisk -c 1:"EFI"  ${DISK}
+sgdisk -c 2:"ROOT" ${DISK}
+sgdisk -c 3:"SWAP" ${DISK}
+sgdisk -c 4:"HOME" ${DISK}
 
-lvcreate -L +200M LVM -n BOOT ${DISK1} 
-lvcreate -l +120G LVM -n ROOT ${DISK1}
-lvcreate -l +100%FREE LVM -n HOME ${DISK1}
+# make filesystems
+echo -e "\nCreating Filesystems...\n$HR"
 
-mkfs.vfat -F 32 -n "BOOT" /dev/LVM/BOOT
-mkfs.ext4 -L "ROOT" /dev/LVM/ROOT
-mkfs.ext4 -L "HOME" /dev/LVM/HOME
+mkfs.vfat -F32 -n "EFI" "${DISK}1"  # Formats EFI Partition
+mkfs.btrfs -L "ROOT" "${DISK}2"     # Formats ROOT Partition
+mkfs.btrfs -L "HOME" "${DISK}4"     # Formats HOME Partition
+mkswap "${DISK}3"                   # Create SWAP
+swapon "${DISK}3"                   #Set SWAP
 
+# mount target
+mkdir /mnt
+mount "${DISK}2" /mnt
+btrfs su cr /mnt/@          # Setup Subvolume for btrfs and timeshift
+umount -l /mnt
+mount "${DISK}4" /mnt
+btrfs su cr /mnt/@home      # Setup Subvolume for btrfs and timeshift
+umount -l /mnt
+mount -o subvol=@ "${DISK}2" /mnt        # Mount Subolume from root
 mkdir /mnt/boot
-mount /dev/LVM/ROOT /mnt
-mount /dev/LVM/BOOT /mnt/boot
-mount /dev/LVM/BOOT /mnt/home
-lsblk
+mount "${DISK}1" /mnt/boot               # Mounts UEFI Partition
 
 echo "--------------------------------------"
 echo "-- Arch Install on selected Drive   --"
@@ -62,12 +81,12 @@ hwclock --systohc
 #locale-gen
 echo "LANG=en_US.UTF-8" >> /etc/locale.conf
 echo "KEYMAP=de-latin1-nodeadkeys" >> /etc/vconsole.conf
-#echo "change to your hostname" >> /etc/hostname
+#echo "annefrank" >> /etc/hostname
 # Setting hosts file
 echo "
-127.0.0.1	    localhost
-::1		        localhost
-127.0.1.1	    yourhostname.localdomain	yourhostname" >> /etc/hosts
+127.0.0.1           localhost
+::1                     localhost
+127.0.1.1           annefrank.localdomain       ReRe" >> /etc/hosts
 mkinitcpio -P
 echo "--------------------------------------"
 echo "-- Grub Installation  --"
@@ -90,4 +109,4 @@ echo "--------------------------------------"
 echo "--          Script ends here!       --"
 echo "--------------------------------------"
 EOT
-umount -R /mnt
+umount -R /mn
